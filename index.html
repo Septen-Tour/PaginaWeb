@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Torneo de Fútbol</title>
+</head>
+<body>
+
+<div id="registration">
+    <h2>Registro</h2>
+    <label for="regEmail">Email:</label>
+    <input type="email" id="regEmail" required>
+    
+    <label for="regPassword">Contraseña:</label>
+    <input type="password" id="regPassword" required>
+    
+    <button onclick="register()">Registrar</button>
+</div>
+
+<div id="login" style="display:none;">
+    <h2>Iniciar Sesión</h2>
+    <label for="loginEmail">Email:</label>
+    <input type="email" id="loginEmail" required>
+    
+    <label for="loginPassword">Contraseña:</label>
+    <input type="password" id="loginPassword" required>
+    
+    <button onclick="login()">Entrar</button>
+</div>
+
+<div id="app" style="display:none;">
+    <div class="tabs">
+        <button class="tablinks" onclick="showTab('perfil')">Perfil</button>
+        <button class="tablinks" onclick="showTab('clasificacion')">Clasificación</button>
+        <button class="tablinks" onclick="showTab('partidos')">Partidos</button>
+        <button class="tablinks" onclick="showTab('photos')">Fotos</button>
+        
+	<button class="tablinks" onclick="showTab('pagos')">Pagos</button> <!-- Nueva pestaña -->
+	<button class="tablinks" onclick="showTab('gestion')">Gestión</button>
+
+    </div>
+
+    <div id="perfil" class="tabcontent">
+        <h3>Perfil del Usuario</h3>
+        <p>Email: <span id="userEmail"></span></p>
+        <p>¡Bienvenido a la gestión del torneo!</p>
+    </div>
+	
+	<div id="pagos" class="tabcontent" style="display:none;">
+    <h3>Realizar Pago</h3>
+    <form id="paymentForm">
+        <label for="cardHolderName">Nombre del Titular:</label>
+        <input type="text" id="cardHolderName" placeholder="Nombre como aparece en la tarjeta" required>
+
+        <label for="cardNumber">Número de Tarjeta:</label>
+        <input type="text" id="cardNumber" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="16" required>
+
+        <label for="expiryDate">Fecha de Expiración:</label>
+        <input type="text" id="expiryDate" placeholder="MM/AA" maxlength="5" required>
+
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" placeholder="Código de seguridad (3 dígitos)" maxlength="3" required>
+
+        <button class="btn" type="submit">Pagar</button>
+    </form>
+    <p id="paymentStatus"></p>
+</div>
+
+
+
+
+    <div id="gestion" class="tabcontent" style="display:none;">
+        <h3>Gestión de Equipos y Jugadores</h3>
+        <label for="teamName">Nombre del Equipo:</label>
+        <input type="text" id="teamName" placeholder="Nombre del equipo">
+
+        <label for="teamColor">Color del Equipo:</label>
+        <select id="teamColor">
+            <option value="#FF5733">Rojo</option>
+            <option value="#28A745">Verde</option>
+            <option value="#007BFF">Azul</option>
+            <option value="#FFC107">Amarillo</option>
+            <option value="#FF851B">Naranja</option>
+        </select>
+
+	
+
+        <button class="btn" onclick="addTeam()">Agregar Equipo</button>
+
+        <h4>Agregar Jugador</h4>
+        <label for="playerName">Nombre del Jugador:</label>
+        <input type="text" id="playerName" placeholder="Nombre del jugador">
+        
+        <label for="playerPosition">Posición:</label>
+        <select id="playerPosition">
+            <option value="portero">Portero</option>
+            <option value="defensa">Defensa</option>
+            <option value="medio">Medio</option>
+            <option value="delantero">Delantero</option>
+        </select>
+        
+        <label for="playerTeam">Seleccionar Equipo:</label>
+        <select id="playerTeam"></select>
+
+        <button class="btn" onclick="addPlayer()">Agregar Jugador</button>
+
+        <h4>Sumar Puntos</h4>
+        <label for="pointsTeam">Seleccionar Equipo:</label>
+        <select id="pointsTeam"></select>
+        
+        <label for="pointsInput">Puntos a sumar:</label>
+        <input type="number" id="pointsInput" placeholder="Puntos">
+        <button class="btn" onclick="addPoints()">Sumar Puntos</button>
+
+        <h4>Agregar Partido</h4>
+        <label for="matchDate">Fecha del Partido:</label>
+        <input type="date" id="matchDate">
+        
+        <label for="matchLocation">Ubicación:</label>
+        <input type="text" id="matchLocation" placeholder="Ubicación del partido">
+
+        <label for="teamOne">Equipo 1:</label>
+        <select id="teamOne"></select>
+
+        <label for="teamTwo">Equipo 2:</label>
+        <select id="teamTwo"></select>
+
+        <button class="btn" onclick="addMatch()">Agregar Partido</button>
+
+        <h4>Agregar Imágenes</h4>
+        <input type="file" id="imageInput" accept="image/*">
+        <button class="btn" onclick="addImage()">Agregar Imagen</button>
+    </div>
+
+    <div id="clasificacion" class="tabcontent">
+        <h3>Tabla de Clasificación</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Equipo</th>
+                    <th>Puntos</th>
+                    <th>Jugadores</th>
+                </tr>
+            </thead>
+            <tbody id="classificationBody"></tbody>
+        </table>
+    </div>
+
+    <div id="partidos" class="tabcontent">
+        <h3>Partidos</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Ubicación</th>
+                    <th>Equipos</th>
+                </tr>
+            </thead>
+            <tbody id="matchesBody"></tbody>
+        </table>
+    </div>
+
+    <div id="photos" class="tabcontent">
+        <h3>Galería de Fotos</h3>
+        <div id="photoGallery" class="photo-gallery"></div>
+    </div>
+</div>
+
+
+
+<script src="script.js"></script>
+</body>
+</html>
