@@ -1,0 +1,105 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h2, h3, h4 {
+    color: #333;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    background-color: #007BFF;
+    padding: 10px;
+}
+
+.tablinks {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tablinks.active {
+    background-color: #0056b3;
+}
+
+.tabcontent {
+    display: none;
+    padding: 20px;
+}
+
+input, select, button {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #28A745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+thead {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+#photoGallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#photoGallery img {
+    width: 100px;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .tabs {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    input, select, button {
+        width: 100%;
+    }
+
+    table, th, td {
+        font-size: 14px;
+    }
+}

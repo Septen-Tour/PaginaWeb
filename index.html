@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Torneo de Fútbol</title>
+</head>
+<body>
+    <!-- Registro e Inicio de Sesión -->
+    <div id="registration">
+        <h2>Registro</h2>
+        <label for="regEmail">Email:</label>
+        <input type="email" id="regEmail" required>
+        <label for="regPassword">Contraseña:</label>
+        <input type="password" id="regPassword" required>
+        <button onclick="register()">Registrar</button>
+        <p>¿Ya tienes cuenta? <a href="#" onclick="toggleLogin()">Iniciar Sesión</a></p>
+    </div>
+
+    <div id="login" style="display:none;">
+        <h2>Iniciar Sesión</h2>
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" required>
+        <label for="loginPassword">Contraseña:</label>
+        <input type="password" id="loginPassword" required>
+        <button onclick="login()">Entrar</button>
+        <p>¿No tienes cuenta? <a href="#" onclick="toggleRegister()">Registrarse</a></p>
+    </div>
+
+    <!-- Aplicación Principal -->
+    <div id="app" style="display:none;">
+        <div class="tabs">
+            <button class="tablinks" onclick="showTab(event, 'perfil')">Perfil</button>
+            <button class="tablinks" onclick="showTab(event, 'clasificacion')">Clasificación</button>
+            <button class="tablinks" onclick="showTab(event, 'partidos')">Partidos</button>
+            <button class="tablinks" onclick="showTab(event, 'photos')">Fotos</button>
+            <button class="tablinks" onclick="showTab(event, 'pagos')">Pagos</button>
+        </div>
+
+        <!-- Sección de Perfil -->
+        <div id="perfil" class="tabcontent">
+            <h3>Perfil del Usuario</h3>
+            <p>Email: <span id="userEmail"></span></p>
+            <p>¡Bienvenido al torneo!</p>
+        </div>
+
+        <!-- Sección de Clasificación -->
+        <div id="clasificacion" class="tabcontent">
+            <h3>Tabla de Clasificación</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Equipo</th>
+                        <th scope="col">Puntos</th>
+                        <th scope="col">Jugadores</th>
+                        <th scope="col">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="classificationBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Sección de Partidos -->
+        <div id="partidos" class="tabcontent">
+            <h3>Partidos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Ubicación</th>
+                        <th>Equipos</th>
+                    </tr>
+                </thead>
+                <tbody id="matchesBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Sección de Fotos -->
+        <div id="photos" class="tabcontent">
+            <h3>Galería de Fotos</h3>
+            <div id="photoGallery" class="photo-gallery"></div>
+        </div>
+
+        <!-- Sección de Pagos -->
+        <div id="pagos" class="tabcontent">
+            <h3>Realizar Pago</h3>
+            <p>Ingrese el monto a pagar:</p>
+            <input type="number" id="paymentAmount" placeholder="Monto en $">
+            <button class="btn" onclick="makePayment()">Pagar</button>
+            <p id="paymentStatus"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
