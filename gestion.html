@@ -3,68 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestión de equipos y jugadores para torneo de fútbol.">
+    <meta name="keywords" content="fútbol, torneo, equipos, jugadores, puntos">
+    <meta name="author" content="Tu Nombre">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <title>Gestión de Torneo</title>
 </head>
 <body>
+    <div class="container">
+        <div id="gestion" class="auth-box">
+            <h3>Gestión de Equipos y Jugadores</h3>
 
-    <div id="gestion">
-        <h3>Gestión de Equipos y Jugadores</h3>
-        <!-- Formulario para agregar equipo -->
-        <label for="teamName">Nombre del Equipo:</label>
-        <input type="text" id="teamName" placeholder="Nombre del equipo">
-        <label for="teamColor">Color del Equipo:</label>
-        <select id="teamColor">
-            <option value="#FF5733">Rojo</option>
-            <option value="#28A745">Verde</option>
-            <option value="#007BFF">Azul</option>
-            <option value="#FFC107">Amarillo</option>
-            <option value="#FF851B">Naranja</option>
-        </select>
-        <button class="btn" onclick="addTeam()">Agregar Equipo</button>
+            <!-- Formulario para agregar equipo -->
+            <label for="teamName">Nombre del Equipo:</label>
+            <input type="text" id="teamName" class="input-field" placeholder="Nombre del equipo">
+            <label for="teamColor">Color del Equipo:</label>
+            <select id="teamColor" class="input-field">
+                <option value="#FF5733">Rojo</option>
+                <option value="#28A745">Verde</option>
+                <option value="#007BFF">Azul</option>
+                <option value="#FFC107">Amarillo</option>
+                <option value="#FF851B">Naranja</option>
+            </select>
+            <button class="btn btn-primary" onclick="addTeam()">Agregar Equipo</button>
 
-        <!-- Formulario para agregar jugador -->
-        <h4>Agregar Jugador</h4>
-        <label for="playerName">Nombre del Jugador:</label>
-        <input type="text" id="playerName" placeholder="Nombre del jugador">
-        <label for="playerPosition">Posición:</label>
-        <select id="playerPosition">
-            <option value="portero">Portero</option>
-            <option value="defensa">Defensa</option>
-            <option value="medio">Medio</option>
-            <option value="delantero">Delantero</option>
-        </select>
-        <label for="playerTeam">Seleccionar Equipo:</label>
-        <select id="playerTeam"></select>
-        <button class="btn" onclick="addPlayer()">Agregar Jugador</button>
+            <!-- Formulario para agregar jugador -->
+            <h4>Agregar Jugador</h4>
+            <label for="playerName">Nombre del Jugador:</label>
+            <input type="text" id="playerName" class="input-field" placeholder="Nombre del jugador">
+            <label for="playerPosition">Posición:</label>
+            <select id="playerPosition" class="input-field">
+                <option value="portero">Portero</option>
+                <option value="defensa">Defensa</option>
+                <option value="medio">Medio</option>
+                <option value="delantero">Delantero</option>
+            </select>
+            <label for="playerTeam">Seleccionar Equipo:</label>
+            <select id="playerTeam" class="input-field"></select>
+            <button class="btn btn-primary" onclick="addPlayer()">Agregar Jugador</button>
 
-        <!-- Sección para sumar puntos -->
-        <h4>Sumar Puntos</h4>
-        <label for="pointsTeam">Seleccionar Equipo:</label>
-        <select id="pointsTeam"></select>
-        <label for="pointsInput">Puntos a sumar:</label>
-        <input type="number" id="pointsInput" placeholder="Puntos">
-        <button class="btn" onclick="addPoints()">Sumar Puntos</button>
+            <!-- Sección para sumar puntos -->
+            <h4>Sumar Puntos</h4>
+            <label for="pointsTeam">Seleccionar Equipo:</label>
+            <select id="pointsTeam" class="input-field"></select>
+            <label for="pointsInput">Puntos a sumar:</label>
+            <input type="number" id="pointsInput" class="input-field" placeholder="Puntos">
+            <button class="btn btn-primary" onclick="addPoints()">Sumar Puntos</button>
 
-        <!-- Sección para agregar partidos -->
-        <h4>Agregar Partido</h4>
-        <label for="matchDate">Fecha del Partido:</label>
-        <input type="date" id="matchDate">
-        <label for="matchLocation">Ubicación:</label>
-        <input type="text" id="matchLocation" placeholder="Ubicación del partido">
-        <label for="teamOne">Equipo 1:</label>
-        <select id="teamOne"></select>
-        <label for="teamTwo">Equipo 2:</label>
-        <select id="teamTwo"></select>
-        <button class="btn" onclick="addMatch()">Agregar Partido</button>
+            <!-- Sección para agregar partidos -->
+            <h4>Agregar Partido</h4>
+            <label for="matchDate">Fecha del Partido:</label>
+            <input type="date" id="matchDate" class="input-field">
+            <label for="matchLocation">Ubicación:</label>
+            <input type="text" id="matchLocation" class="input-field" placeholder="Ubicación del partido">
+            <label for="teamOne">Equipo 1:</label>
+            <select id="teamOne" class="input-field"></select>
+            <label for="teamTwo">Equipo 2:</label>
+            <select id="teamTwo" class="input-field"></select>
+            <button class="btn btn-primary" onclick="addMatch()">Agregar Partido</button>
 
-        <!-- Sección para agregar imágenes -->
-        <h4>Agregar Imágenes</h4>
-        <input type="file" id="imageInput" accept="image/*">
-        <button class="btn" onclick="addImage()">Agregar Imagen</button>
+            <!-- Sección para agregar imágenes -->
+            <h4>Agregar Imágenes</h4>
+            <input type="file" id="imageInput" class="input-field" accept="image/*">
+            <button class="btn btn-primary" onclick="addImage()">Agregar Imagen</button>
+
+            <!-- Botón para eliminar localStorage -->
+            <h4>Eliminar toda la información</h4>
+            <button class="btn btn-danger" onclick="clearLocalStorage()">Eliminar Todos los Datos</button>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Variables globales para almacenamiento en localStorage
+        let teams = JSON.parse(localStorage.getItem('teams')) || [];
+        let players = JSON.parse(localStorage.getItem('players')) || [];
+        let matches = JSON.parse(localStorage.getItem('matches')) || [];
+        let photos = JSON.parse(localStorage.getItem('photos')) || [];
+
+        // Función para agregar un equipo
+        function addTeam() {
+            const teamName = document.getElementById('teamName').value.trim();
+            const teamColor = document.getElementById('teamColor').value;
+
+            if (!teamName) {
+                alert("Por favor, ingresa un nombre de equipo.");
+                return;
+            }
+
+            // Verificar si el equipo ya existe
+            if (teams.some(team => team.name.toLowerCase() === teamName.toLowerCase())) {
+                alert("El equipo ya está registrado.");
+                return;
+            }
+
+            // Agregar equipo a la lista
+            teams.push({ name: teamName, color: teamColor, players: [], points: 0 });
+            localStorage.setItem('teams', JSON.stringify(teams));
+            alert(`Equipo ${teamName} agregado con éxito.`);
+            updateTeamSelects(); // Actualizar los selects con el equipo agregado
+        }
+
+        // Función para agregar un jugador
+        function addPlayer() {
+            const playerName = document.getElementById('playerName').value.trim();
+            const playerPosition = document.getElementById('playerPosition').value;
+            const playerTeam = document.getElementById('playerTeam').value;
+
+            if (!playerName || !playerTeam) {
+                alert("Por favor, ingresa un nombre de jugador y selecciona un equipo.");
+                return;
+            }
+
+            // Agregar jugador a la lista
+            players.push({ name: playerName, position: playerPosition, team: playerTeam });
+            localStorage.setItem('players', JSON.stringify(players));
+            alert(`Jugador ${playerName} agregado al equipo ${playerTeam}.`);
+
+            // Agregar jugador al equipo correspondiente
+            const team = teams.find(t => t.name === playerTeam);
+            if (team) {
+                team.players.push(playerName);
+                localStorage.setItem('teams', JSON.stringify(teams));
+            }
+        }
+
+        // Función para sumar puntos a un equipo
+        function addPoints() {
+            const teamName = document.getElementById('pointsTeam').value;
+            const pointsInput = document.getElementById('pointsInput').value;
+            const points = parseInt(pointsInput, 10);
+
+            if (!teamName || isNaN(points) || points <= 0) {
+                alert("Selecciona un equipo e ingresa un valor válido de puntos.");
+                return;
+            }
+
+            // Encontrar el equipo y sumar los puntos
+            const team = teams.find(t => t.name === teamName);
+            if (team) {
+                team.points += points;
+                localStorage.setItem('teams', JSON.stringify(teams));
+                alert(`Se sumaron ${points} puntos al equipo ${teamName}.`);
+            }
+        }
+
+        // Función para actualizar los selects con los equipos disponibles
+        function updateTeamSelects() {
+            const teamSelects = document.querySelectorAll('#playerTeam, #pointsTeam, #teamOne, #teamTwo');
+            teamSelects.forEach(select => {
+                select.innerHTML = '<option value="">Selecciona un equipo</option>';
+                teams.forEach(team => {
+                    const option = document.createElement('option');
+                    option.value = team.name;
+                    option.textContent = team.name;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // Función para agregar un partido y guardarlo en localStorage
+        function addMatch() {
+            const matchDate = document.getElementById('matchDate').value;
+            const matchLocation = document.getElementById('matchLocation').value.trim();
+            const teamOne = document.getElementById('teamOne').value;
+            const teamTwo = document.getElementById('teamTwo').value;
+
+            if (!matchDate || !matchLocation || !teamOne || !teamTwo || teamOne === teamTwo) {
+                alert("Por favor, completa toda la información del partido y selecciona equipos diferentes.");
+                return;
+            }
+
+            const match = {
+                date: matchDate,
+                location: matchLocation,
+                teamOne: teamOne,
+                teamTwo: teamTwo
+            };
+
+            matches.push(match);
+            localStorage.setItem('matches', JSON.stringify(matches));
+            alert(`Partido entre ${teamOne} y ${teamTwo} agregado para la fecha ${matchDate} en ${matchLocation}.`);
+        }
+
+        // Función para agregar una imagen
+        function addImage() {
+            const imageInput = document.getElementById('imageInput').files[0];
+            if (imageInput) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    const base64String = reader.result;
+                    photos.push(base64String);
+                    localStorage.setItem('photos', JSON.stringify(photos));
+                    alert("Imagen agregada con éxito.");
+                };
+                reader.readAsDataURL(imageInput);
+            } else {
+                alert("Selecciona una imagen.");
+            }
+        }
+
+        // Función para eliminar todo el localStorage
+        function clearLocalStorage() {
+            if (confirm("¿Estás seguro de que deseas eliminar toda la información almacenada? Esta acción no se puede deshacer.")) {
+                localStorage.clear();
+                alert("Toda la información ha sido eliminada.");
+                // Restablecer las listas
+                teams = [];
+                players = [];
+                matches = [];
+                photos = [];
+                updateTeamSelects(); // Actualizar los selects para que no haya equipos seleccionables
+            }
+        }
+
+        // Cargar equipos en los selects cuando se cargue la página
+        document.addEventListener('DOMContentLoaded', updateTeamSelects);
+    </script>
 </body>
 </html>
