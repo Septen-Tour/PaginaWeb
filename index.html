@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestión de equipos y jugadores para torneo de fútbol.">
+    <meta name="keywords" content="fútbol, torneo, equipos, jugadores, puntos">
+    <meta name="author" content="Tu Nombre">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Torneo de Fútbol</title>
+</head>
+<body>
+    <!-- Registro e Inicio de Sesión -->
+    <div id="registration" class="auth-box">
+        <h2>Registro</h2>
+        <label for="regEmail">Email:</label>
+        <input type="email" id="regEmail" class="input-field" required>
+        <span id="emailError" class="error-message"></span>
+        <label for="regPassword">Contraseña:</label>
+        <input type="password" id="regPassword" class="input-field" required>
+        <span id="passwordError" class="error-message"></span>
+        <button onclick="register()" class="btn btn-primary">Registrar</button>
+        <p>¿Ya tienes cuenta? <a href="#" onclick="toggleLogin()" class="link">Iniciar Sesión</a></p>
+    </div>
+
+    <div id="login" class="auth-box" style="display:none;">
+        <h2>Iniciar Sesión</h2>
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" class="input-field" required>
+        <label for="loginPassword">Contraseña:</label>
+        <input type="password" id="loginPassword" class="input-field" required>
+        <button onclick="login()" class="btn btn-primary">Entrar</button>
+        <p>¿No tienes cuenta? <a href="#" onclick="toggleRegister()" class="link">Registrarse</a></p>
+    </div>
+
+    <!-- Aplicación Principal -->
+    <div id="app" style="display:none;">
+        <div class="tabs">
+            <button class="tablinks" onclick="showTab(event, 'perfil')">Perfil</button>
+            <button class="tablinks" onclick="showTab(event, 'clasificacion')">Clasificación</button>
+            <button class="tablinks" onclick="showTab(event, 'partidos')">Partidos</button>
+            <button class="tablinks" onclick="showTab(event, 'photos')">Fotos</button>
+            <button class="tablinks" onclick="showTab(event, 'pagos')">Pagos</button>
+        </div>
+
+        <!-- Sección de Perfil -->
+        <div id="perfil" class="tabcontent">
+            <h3>Perfil del Usuario</h3>
+            <p>Email: <span id="userEmail"></span></p>
+            <p>¡Bienvenido al torneo!</p>
+            <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+        </div>
+
+        <!-- Sección de Clasificación -->
+        <div id="clasificacion" class="tabcontent">
+            <h3>Tabla de Clasificación</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Equipo</th>
+                        <th scope="col">Puntos</th>
+                        <th scope="col">Jugadores</th>
+                        <th scope="col">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="classificationBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Sección de Partidos -->
+        <div id="partidos" class="tabcontent">
+            <h3>Partidos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Ubicación</th>
+                        <th>Equipos</th>
+                    </tr>
+                </thead>
+                <tbody id="matchesBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Sección de Fotos -->
+        <div id="photos" class="tabcontent">
+            <h3>Galería de Fotos</h3>
+            <div id="photoGallery" class="photo-gallery"></div>
+        </div>
+
+        <!-- Sección de Pagos -->
+        <div id="pagos" class="tabcontent">
+            <h3>Realizar Pago</h3>
+            <p>Ingrese el monto a pagar:</p>
+            <input type="number" id="paymentAmount" class="input-field" placeholder="Monto en $">
+            <button class="btn btn-primary" onclick="makePayment()">Pagar</button>
+            <p id="paymentStatus"></p>
+        </div>
+    </div>
+
+    <script>
+        let teams = JSON.parse(localStorage.getItem('teams')) || [];
+        let players = JSON.parse(localStorage.getItem('players')) || [];
+        let matches = JSON.parse(localStorage.getItem('matches')) || [];
+        let photos = JSON.parse(localStorage.getItem('photos')) || [];
+        let loggedInUser = null;
+
+        // Función para registrar usuario
+        function register() {
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (!email || !password) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
+            // Guardar usuario en localStorage (para fines de demostración)
+            localStorage.setItem('loggedInUser', JSON.stringify({ email, password }));
+            alert("Registro exitoso. Ahora puedes iniciar sesión.");
+            toggleLogin();
+        }
+
+        // Función para iniciar sesión
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            let user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+            if (user && user.email === email && user.password === password) {
+                loggedInUser = user;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('registration').style.display = 'none';
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                loadTeams();
+                loadMatches();
+                loadPhotos();
+            } else {
+                alert("Email o contraseña incorrectos.");
+            }
+        }
+
+        // Función para alternar entre registro e inicio de sesión
+        function toggleLogin() {
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+        }
+
+        function toggleRegister() {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('registration').style.display = 'block';
+        }
+
+        // Función para mostrar pestañas
+        function showTab(event, tabName) {
+            const tabcontent = document.getElementsByClassName('tabcontent');
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = 'none';
+            }
+            const tablinks = document.getElementsByClassName('tablinks');
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove('active');
+            }
+            document.getElementById(tabName).style.display = 'block';
+            event.currentTarget.classList.add('active');
+        }
+
+        // Función para cargar equipos desde localStorage
+        function loadTeams() {
+            const classificationBody = document.getElementById('classificationBody');
+            classificationBody.innerHTML = '';
+
+            teams.forEach(team => {
+                const row = document.createElement('tr');
+                const playersList = team.players.length > 0 ? team.players.join(', ') : '-';
+                row.innerHTML = `
+                    <td>${team.name}</td>
+                    <td>${team.points}</td>
+                    <td>${playersList}</td>
+                    <td>
+                        <button onclick="joinTeam('${team.name}')">Unirse</button>
+                        <button onclick="leaveTeam('${team.name}')">Abandonar</button>
+                    </td>
+                `;
+                classificationBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar partidos desde localStorage
+        function loadMatches() {
+            const matchesBody = document.getElementById('matchesBody');
+            matchesBody.innerHTML = '';
+
+            matches.forEach(match => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${match.date}</td>
+                    <td>${match.location}</td>
+                    <td>${match.teamOne} vs ${match.teamTwo}</td>
+                `;
+                matchesBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar fotos desde localStorage
+        function loadPhotos() {
+            const photoGallery = document.getElementById('photoGallery');
+            photoGallery.innerHTML = '';
+
+            photos.forEach(photo => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = "Imagen de la galería";
+                img.style.width = "100px"; // Ajustar el tamaño según sea necesario
+                img.style.margin = "10px";
+                img.style.borderRadius = "8px";
+                photoGallery.appendChild(img);
+            });
+        }
+
+        // Función para unirse a un equipo
+        function joinTeam(teamName) {
+            if (!loggedInUser) {
+                alert("Por favor, inicia sesión para unirte a un equipo.");
+                return;
+            }
+
+            const team = teams.find(t => t.name === teamName);
+            if (team && !team.players.includes(loggedInUser.email)) {
+                team.players.push(loggedInUser.email);
+                localStorage.setItem('teams', JSON.stringify(teams));
+                alert(`Te has unido al equipo ${teamName}.`);
+                loadTeams();
+            } else {
+                alert("Ya eres miembro de este equipo.");
+            }
+        }
+
+        // Función para abandonar un equipo
+        function leaveTeam(teamName) {
+            if (!loggedInUser) {
+                alert("Por favor, inicia sesión para abandonar un equipo.");
+                return;
+            }
+
+            const team = teams.find(t => t.name === teamName);
+            if (team) {
+                team.players = team.players.filter(player => player !== loggedInUser.email);
+                localStorage.setItem('teams', JSON.stringify(teams));
+                alert(`Has abandonado el equipo ${teamName}.`);
+                loadTeams();
+            }
+        }
+
+        // Cargar equipos, partidos y fotos cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTeams();
+            loadMatches();
+            loadPhotos();
+        });
+    </script>
+</body>
+</html>
