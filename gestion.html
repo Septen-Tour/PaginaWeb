@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Equipos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #83a4d4, #b6fbff);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+        }
+
+        button, select, input[type="text"], input[type="number"] {
+            padding: 10px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #388E3C;
+        }
+
+        button.delete {
+            background-color: #f44336;
+        }
+
+        button.delete:hover {
+            background-color: #d32f2f;
+        }
+
+        .form-group {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Gestión de Equipos</h2>
+
+        <!-- Formulario para agregar nuevos equipos -->
+        <div class="form-group">
+            <h3>Agregar Nuevo Equipo</h3>
+            <label for="newTeamName">Nombre del Equipo:</label>
+            <input type="text" id="newTeamName" placeholder="Nombre del equipo" required>
+
+            <label for="newTeamColor">Color del Equipo:</label>
+            <select id="newTeamColor" required>
+                <option value="#FF0000" style="color:#FF0000;">Rojo</option>
+                <option value="#0000FF" style="color:#0000FF;">Azul</option>
+                <option value="#00FF00" style="color:#00FF00;">Verde</option>
+                <option value="#FFFF00" style="color:#FFFF00;">Amarillo</option>
+                <option value="#FFA500" style="color:#FFA500;">Naranja</option>
+                <option value="#800080" style="color:#800080;">Morado</option>
+                <option value="#000000" style="color:#000000;">Negro</option>
+                <option value="#FFFFFF" style="color:#FFFFFF; background-color: #000;">Blanco</option>
+            </select>
+
+            <label for="newTeamPlayers">Jugadores (separados por coma):</label>
+            <input type="text" id="newTeamPlayers" placeholder="Jugador 1, Jugador 2, etc." required>
+
+            <button id="addTeamButton">Agregar Equipo</button>
+        </div>
+
+        <!-- Tabla de equipos -->
+        <table id="teamsTable">
+            <thead>
+                <tr>
+                    <th>Nombre del Equipo</th>
+                    <th>Color del Equipo</th>
+                    <th>Jugadores</th>
+                    <th>Puntos</th>
+                    <th>Acciones</th> <!-- Columna para editar/eliminar equipos -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se mostrarán los equipos -->
+            </tbody>
+        </table>
+
+        <!-- Formulario de edición -->
+        <div class="form-group">
+            <h3>Modificar Equipo</h3>
+            <label for="editTeamName">Nombre del Equipo:</label>
+            <input type="text" id="editTeamName" required>
+
+            <label for="editTeamColor">Color del Equipo:</label>
+            <select id="editTeamColor" required>
+                <option value="#FF0000" style="color:#FF0000;">Rojo</option>
+                <option value="#0000FF" style="color:#0000FF;">Azul</option>
+                <option value="#00FF00" style="color:#00FF00;">Verde</option>
+                <option value="#FFFF00" style="color:#FFFF00;">Amarillo</option>
+                <option value="#FFA500" style="color:#FFA500;">Naranja</option>
+                <option value="#800080" style="color:#800080;">Morado</option>
+                <option value="#000000" style="color:#000000;">Negro</option>
+                <option value="#FFFFFF" style="color:#FFFFFF; background-color: #000;">Blanco</option>
+            </select>
+
+            <label for="editTeamPoints">Puntos del Equipo:</label>
+            <input type="number" id="editTeamPoints" min="0" required>
+
+            <button id="saveChanges">Guardar Cambios</button>
+        </div>
+
+        <!-- Botón para eliminar miembros -->
+        <div class="form-group">
+            <h3>Eliminar Miembros del Equipo</h3>
+            <label for="editTeamMembers">Jugadores:</label>
+            <select id="editTeamMembers" multiple></select>
+
+            <button id="removeMember" class="delete">Eliminar Miembro Seleccionado</button>
+        </div>
+
+    </div>
+
+    <script>
+        let selectedTeamIndex = null;
+        let teams = JSON.parse(localStorage.getItem('teams')) || [];
+
+        // Mostrar equipos en la tabla
+        function displayTeams() {
+            const teamsTableBody = document.querySelector('#teamsTable tbody');
+            teamsTableBody.innerHTML = '';
+
+            teams.forEach(function(team, index) {
+                const row = document.createElement('tr');
+
+                // Nombre del equipo
+                const teamNameCell = document.createElement('td');
+                teamNameCell.textContent = team.teamName;
+
+                // Color del equipo
+                const teamColorCell = document.createElement('td');
+                const colorBox = document.createElement('div');
+                colorBox.className = 'color-box';
+                colorBox.style.backgroundColor = team.teamColor;
+                teamColorCell.appendChild(colorBox);
+
+                // Lista de jugadores
+                const playersCell = document.createElement('td');
+                playersCell.textContent = team.players.join(', ');
+
+                // Puntos del equipo
+                const pointsCell = document.createElement('td');
+                pointsCell.textContent = team.points || 0;
+
+                // Botón para seleccionar equipo a editar
+                const actionsCell = document.createElement('td');
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Editar';
+                editButton.addEventListener('click', function() {
+                    selectTeamToEdit(index);
+                });
+
+                // Botón para eliminar equipo
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Eliminar Equipo';
+                deleteButton.className = 'delete';
+                deleteButton.addEventListener('click', function() {
+                    deleteTeam(index);
+                });
+
+                actionsCell.appendChild(editButton);
+                actionsCell.appendChild(deleteButton);
+
+                // Añadir celdas a la fila
+                row.appendChild(teamNameCell);
+                row.appendChild(teamColorCell);
+                row.appendChild(playersCell);
+                row.appendChild(pointsCell);
+                row.appendChild(actionsCell);
+
+                // Añadir la fila a la tabla
+                teamsTableBody.appendChild(row);
+            });
+        }
+
+        // Seleccionar equipo para editar
+        function selectTeamToEdit(index) {
+            selectedTeamIndex = index;
+            const team = teams[index];
+
+            // Llenar los campos del formulario de edición
+            document.getElementById('editTeamName').value = team.teamName;
+            document.getElementById('editTeamColor').value = team.teamColor;
+            document.getElementById('editTeamPoints').value = team.points;
+
+            // Llenar la lista de jugadores para eliminar miembros
+            const membersSelect = document.getElementById('editTeamMembers');
+            membersSelect.innerHTML = ''; // Limpiar la lista de miembros
+            team.players.forEach(function(player) {
+                const option = document.createElement('option');
+                option.value = player;
+                option.textContent = player;
+                membersSelect.appendChild(option);
+            });
+        }
+
+        // Guardar los cambios realizados al equipo
+        document.getElementById('saveChanges').addEventListener('click', function() {
+            if (selectedTeamIndex === null) {
+                alert('Selecciona un equipo primero.');
+                return;
+            }
+
+            const teamName = document.getElementById('editTeamName').value.trim();
+            const teamColor = document.getElementById('editTeamColor').value;
+            const teamPoints = parseInt(document.getElementById('editTeamPoints').value);
+
+            // Guardar los cambios
+            teams[selectedTeamIndex].teamName = teamName;
+            teams[selectedTeamIndex].teamColor = teamColor;
+            teams[selectedTeamIndex].points = teamPoints;
+
+            // Actualizar en localStorage
+            localStorage.setItem('teams', JSON.stringify(teams));
+
+            alert('Cambios guardados.');
+            displayTeams();
+        });
+
+        // Eliminar miembro del equipo seleccionado
+        document.getElementById('removeMember').addEventListener('click', function() {
+            const selectedMembers = document.getElementById('editTeamMembers').selectedOptions;
+
+            if (selectedMembers.length === 0) {
+                alert('Selecciona al menos un miembro para eliminar.');
+                return;
+            }
+
+            Array.from(selectedMembers).forEach(function(option) {
+                const memberName = option.value;
+                const index = teams[selectedTeamIndex].players.indexOf(memberName);
+                if (index > -1) {
+                    teams[selectedTeamIndex].players.splice(index, 1); // Eliminar miembro
+                }
+            });
+
+            // Actualizar en localStorage
+            localStorage.setItem('teams', JSON.stringify(teams));
+
+            alert('Miembro(s) eliminado(s).');
+            selectTeamToEdit(selectedTeamIndex); // Actualizar la lista de miembros
+            displayTeams();
+        });
+
+        // Eliminar equipo
+        function deleteTeam(index) {
+            if (confirm('¿Estás seguro de que deseas eliminar este equipo?')) {
+                teams.splice(index, 1); // Eliminar equipo
+                localStorage.setItem('teams', JSON.stringify(teams)); // Actualizar localStorage
+                displayTeams(); // Actualizar tabla
+            }
+        }
+
+        // Agregar un nuevo equipo
+        document.getElementById('addTeamButton').addEventListener('click', function() {
+            const teamName = document.getElementById('newTeamName').value.trim();
+            const teamColor = document.getElementById('newTeamColor').value;
+            const teamPlayers = document.getElementById('newTeamPlayers').value.split(',').map(player => player.trim());
+            
+            if (teamName === '' || teamPlayers.length === 0) {
+                alert('Por favor, ingresa todos los campos para agregar un equipo.');
+                return;
+            }
+
+            const newTeam = {
+                teamName: teamName,
+                teamColor: teamColor,
+                players: teamPlayers,
+                points: 0 // Puntos iniciales en 0
+            };
+
+            teams.push(newTeam); // Agregar el nuevo equipo al array
+            localStorage.setItem('teams', JSON.stringify(teams)); // Guardar en localStorage
+
+            alert(`¡Equipo ${teamName} creado con éxito!`);
+            displayTeams(); // Actualizar la tabla
+            document.getElementById('newTeamName').value = ''; // Limpiar el formulario
+            document.getElementById('newTeamPlayers').value = '';
+        });
+
+        // Mostrar los equipos al cargar la página
+        displayTeams();
+    </script>
+
+</body>
+</html>

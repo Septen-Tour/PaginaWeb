@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro y Creación de Equipos de Fútbol 8</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #83a4d4, #b6fbff);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-container, .team-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-container h2, .team-form h2 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], input[type="password"], input[type="number"], select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #388E3C;
+        }
+
+        .link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .link a {
+            color: #388E3C;
+            text-decoration: none;
+        }
+
+        .success-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+        }
+
+        .error-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de registro -->
+        <div class="form-container" id="registerFormContainer">
+            <h2>Registro</h2>
+            <form id="registerForm">
+                <label for="fullName">Nombre Completo:</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Ingresa tu nombre completo" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Ingresa tu correo electrónico" required>
+
+                <label for="phone">Teléfono:</label>
+                <input type="tel" id="phone" name="phone" placeholder="Ingresa tu número de teléfono" required pattern="[0-9]{10}" title="Debe ser un número de 10 dígitos">
+
+                <label for="password">Clave:</label>
+                <input type="password" id="password" name="password" placeholder="Crea una clave" required>
+
+                <button type="submit">Registrarse</button>
+            </form>
+            <div class="link">
+                <a href="#" id="goToLogin">Ya tienes cuenta? Inicia sesión</a> <!-- Enlace para ir a iniciar sesión -->
+            </div>
+        </div>
+
+        <!-- Formulario de inicio de sesión -->
+        <div class="form-container" id="loginFormContainer" style="display: none;">
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" name="loginEmail" placeholder="Ingresa tu correo electrónico" required>
+
+                <label for="loginPassword">Clave:</label>
+                <input type="password" id="loginPassword" name="loginPassword" placeholder="Ingresa tu clave" required>
+
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+            <div class="link">
+                <a href="#" id="goToRegister">No tienes cuenta? Regístrate aquí</a> <!-- Enlace para volver al registro -->
+            </div>
+        </div>
+
+        <!-- Formulario para crear equipo, solo visible cuando el usuario esté logueado -->
+        <div class="team-form" id="teamFormContainer" style="display: none;">
+            <h2>Crear Equipo de Fútbol 8</h2>
+            <form id="teamForm">
+                <label for="teamName">Nombre del Equipo:</label>
+                <input type="text" id="teamName" name="teamName" placeholder="Nombre del equipo" required>
+
+                <label for="teamColor">Color del Equipo:</label>
+                <select id="teamColor" name="teamColor" required>
+                    <option value="#FF0000" style="color:#FF0000;">Rojo</option>
+                    <option value="#0000FF" style="color:#0000FF;">Azul</option>
+                    <option value="#00FF00" style="color:#00FF00;">Verde</option>
+                    <option value="#FFFF00" style="color:#FFFF00;">Amarillo</option>
+                    <option value="#FFA500" style="color:#FFA500;">Naranja</option>
+                    <option value="#800080" style="color:#800080;">Morado</option>
+                    <option value="#000000" style="color:#000000;">Negro</option>
+                    <option value="#FFFFFF" style="color:#FFFFFF; background-color: #000;">Blanco</option>
+                </select>
+
+     
+
+                <label>Jugadores (máximo 8):</label>
+                <div class="player-inputs" id="playerInputs">
+                    <input type="text" name="player" placeholder="Jugador 1" required>
+                </div>
+                <button type="submit">Crear Equipo</button>
+            </form>
+
+            <div class="success-message" id="successMessage">
+                ¡El equipo ha sido creado exitosamente!
+            </div>
+
+            <!-- Botón para cerrar sesión -->
+            <button id="logoutButton" style="margin-top: 20px;">Cerrar Sesión</button>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            Error: La clave o el email son incorrectos.
+        </div>
+    </div>
+
+    <script>
+        // Mostrar formulario de inicio de sesión si el usuario ya tiene cuenta
+        document.getElementById('goToLogin').addEventListener('click', function() {
+            document.getElementById('registerFormContainer').style.display = 'none';
+            document.getElementById('loginFormContainer').style.display = 'block';
+        });
+
+        // Mostrar formulario de registro si el usuario no tiene cuenta
+        document.getElementById('goToRegister').addEventListener('click', function() {
+            document.getElementById('loginFormContainer').style.display = 'none';
+            document.getElementById('registerFormContainer').style.display = 'block';
+        });
+
+        // Función para registrar un usuario
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Guardar los datos del usuario en localStorage
+            const user = { fullName, email, phone, password };
+            localStorage.setItem('user_' + email, JSON.stringify(user)); // Guardamos el usuario con la clave user_email
+
+            alert(`¡Registro exitoso, ${fullName}! Ya puedes iniciar sesión.`);
+            document.getElementById('registerFormContainer').style.display = 'none';
+            document.getElementById('loginFormContainer').style.display = 'block';
+        });
+
+        // Función para iniciar sesión
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const loginEmail = document.getElementById('loginEmail').value.trim();
+            const loginPassword = document.getElementById('loginPassword').value;
+
+            const storedUser = localStorage.getItem('user_' + loginEmail);
+
+            // Verificar si el usuario existe y la clave es correcta
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                if (user.password === loginPassword) {
+                    // Iniciar sesión y guardar la sesión activa
+                    localStorage.setItem('activeUser', JSON.stringify(user));
+                    alert(`¡Bienvenido de nuevo, ${user.fullName}!`);
+                    document.getElementById('loginFormContainer').style.display = 'none';
+                    document.getElementById('teamFormContainer').style.display = 'block';
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+
+        // Cargar usuario activo si está logueado
+        const activeUser = JSON.parse(localStorage.getItem('activeUser'));
+        if (activeUser) {
+            document.getElementById('registerFormContainer').style.display = 'none';
+            document.getElementById('loginFormContainer').style.display = 'none';
+            document.getElementById('teamFormContainer').style.display = 'block';
+        }
+
+        // Función para cerrar sesión
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('activeUser');
+            alert('Sesión cerrada.');
+            document.getElementById('teamFormContainer').style.display = 'none';
+            document.getElementById('loginFormContainer').style.display = 'block';
+        });
+    </script>
+
+</body>
+</html>

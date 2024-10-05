@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Equipos Creados</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #83a4d4, #b6fbff);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        button.abandon {
+            background-color: #f44336;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .success-message, .error-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .link a {
+            color: #388E3C;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de inicio de sesión -->
+        <div class="form-container" id="loginFormContainer">
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" name="loginEmail" placeholder="Ingresa tu correo electrónico" required>
+
+                <label for="loginPassword">Clave:</label>
+                <input type="password" id="loginPassword" name="loginPassword" placeholder="Ingresa tu clave" required>
+
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+            <div class="link">
+                <a href="registro.html">¿No tienes cuenta? Regístrate aquí</a> <!-- Enlace para volver al registro -->
+            </div>
+        </div>
+
+        <!-- Tabla de equipos creada -->
+        <h2 id="teamsTableTitle" style="display: none;">Tabla de Equipos Creados</h2>
+        <table id="teamsTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Nombre del Equipo</th>
+                    <th>Color del Equipo</th>
+                    <th>Jugadores</th>
+                    <th>Puntos</th>
+                    <th>Acciones</th> <!-- Nueva columna para botones -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se mostrarán los equipos -->
+            </tbody>
+        </table>
+
+        <!-- Botón para cerrar sesión -->
+        <button id="logoutButton" style="display: none;">Cerrar Sesión</button>
+
+        <div class="error-message" id="errorMessage">
+            Error: La clave o el email son incorrectos.
+        </div>
+    </div>
+
+    <script>
+        // Mostrar la tabla de equipos si el usuario está logueado
+        const activeUser = JSON.parse(localStorage.getItem('activeUser'));
+        if (activeUser) {
+            document.getElementById('loginFormContainer').style.display = 'none';
+            document.getElementById('teamsTable').style.display = 'table';
+            document.getElementById('teamsTableTitle').style.display = 'block';
+            document.getElementById('logoutButton').style.display = 'block';
+            displayTeams(); // Mostrar equipos
+        }
+
+        // Función para iniciar sesión
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const loginEmail = document.getElementById('loginEmail').value.trim();
+            const loginPassword = document.getElementById('loginPassword').value;
+
+            const storedUser = localStorage.getItem('user_' + loginEmail);
+
+            // Verificar si el usuario existe y la clave es correcta
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                if (user.password === loginPassword) {
+                    // Iniciar sesión y guardar la sesión activa
+                    localStorage.setItem('activeUser', JSON.stringify(user));
+                    alert(`¡Bienvenido de nuevo, ${user.fullName}!`);
+                    document.getElementById('loginFormContainer').style.display = 'none';
+                    document.getElementById('teamsTable').style.display = 'table';
+                    document.getElementById('teamsTableTitle').style.display = 'block';
+                    document.getElementById('logoutButton').style.display = 'block';
+                    displayTeams(); // Mostrar equipos
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+
+        // Función para cerrar sesión
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('activeUser');
+            alert('Sesión cerrada.');
+            document.getElementById('teamsTable').style.display = 'none';
+            document.getElementById('teamsTableTitle').style.display = 'none';
+            document.getElementById('loginFormContainer').style.display = 'block';
+            document.getElementById('logoutButton').style.display = 'none';
+        });
+
+        // Leer los equipos desde localStorage y mostrarlos en la tabla
+        function displayTeams() {
+            const teamsTableBody = document.querySelector('#teamsTable tbody');
+            teamsTableBody.innerHTML = '';
+
+            const teams = JSON.parse(localStorage.getItem('teams')) || [];
+
+            teams.forEach(function(team, index) {
+                const row = document.createElement('tr');
+
+                // Nombre del equipo
+                const teamNameCell = document.createElement('td');
+                teamNameCell.textContent = team.teamName;
+
+                // Color del equipo
+                const teamColorCell = document.createElement('td');
+                const colorBox = document.createElement('div');
+                colorBox.className = 'color-box';
+                colorBox.style.backgroundColor = team.teamColor;
+                teamColorCell.appendChild(colorBox);
+
+                // Lista de jugadores
+                const playersCell = document.createElement('td');
+                playersCell.textContent = team.players.join(', ');
+
+                // Puntos del equipo
+                const pointsCell = document.createElement('td');
+                pointsCell.textContent = team.points || 0;
+
+                // Botones de unirse y abandonar
+                const actionsCell = document.createElement('td');
+
+                // Botón para unirse
+                const joinButton = document.createElement('button');
+                joinButton.textContent = 'Unirse';
+                joinButton.addEventListener('click', function() {
+                    joinTeam(index);
+                });
+
+                // Botón para abandonar
+                const leaveButton = document.createElement('button');
+                leaveButton.textContent = 'Abandonar';
+                leaveButton.className = 'abandon';
+                leaveButton.addEventListener('click', function() {
+                    leaveTeam(index);
+                });
+
+                // Deshabilitar los botones según el estado del usuario
+                if (localStorage.getItem('currentUserTeam') === team.teamName) {
+                    joinButton.disabled = true; // Desactivar unirse si ya está en el equipo
+                }
+
+                // Agregar los botones a la celda de acciones
+                actionsCell.appendChild(joinButton);
+                actionsCell.appendChild(leaveButton);
+
+                // Añadir celdas a la fila
+                row.appendChild(teamNameCell);
+                row.appendChild(teamColorCell);
+                row.appendChild(playersCell);
+                row.appendChild(pointsCell);
+                row.appendChild(actionsCell);
+
+                // Añadir la fila a la tabla
+                teamsTableBody.appendChild(row);
+            });
+        }
+
+        // Función para unirse a un equipo
+        function joinTeam(teamIndex) {
+            const teams = JSON.parse(localStorage.getItem('teams'));
+            if (localStorage.getItem('currentUserTeam')) {
+                alert('Ya estás unido a un equipo. Debes abandonar el equipo antes de unirte a otro.');
+                return;
+            }
+
+            const currentUser = activeUser.fullName; // Identificar al usuario logueado
+            teams[teamIndex].players.push(currentUser); // Agregar el usuario como jugador
+            localStorage.setItem('teams', JSON.stringify(teams));
+            localStorage.setItem('currentUserTeam', teams[teamIndex].teamName); // Guardar el equipo del usuario
+
+            alert(`Te has unido al equipo ${teams[teamIndex].teamName}`);
+            displayTeams(); // Actualizar la tabla
+        }
+
+        // Función para abandonar un equipo
+        function leaveTeam(teamIndex) {
+            const teams = JSON.parse(localStorage.getItem('teams'));
+            const currentUserTeam = localStorage.getItem('currentUserTeam');
+            if (!currentUserTeam || currentUserTeam !== teams[teamIndex].teamName) {
+                alert('No puedes abandonar este equipo porque no estás en él.');
+                return;
+            }
+
+            const currentUser = activeUser.fullName; // Identificar al usuario logueado
+            teams[teamIndex].players = teams[teamIndex].players.filter(player => player !== currentUser);
+            localStorage.setItem('teams', JSON.stringify(teams));
+            localStorage.removeItem('currentUserTeam'); // Eliminar el equipo del usuario
+
+            alert(`Has abandonado el equipo ${teams[teamIndex].teamName}`);
+            displayTeams(); // Actualizar la tabla
+        }
+    </script>
+
+</body>
+</html>
